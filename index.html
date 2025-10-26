@@ -1,0 +1,382 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LILDRUG</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            background-image: url('images/vaybe.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Анимация затемнения экрана */
+        .screen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeOut 2s ease-in-out 1s forwards;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        .loading-icon {
+            width: 80px;
+            height: 80px;
+            animation: pulse 1.5s ease-in-out infinite;
+            filter: brightness(0.8);
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+        }
+
+        /* Верхняя панель - темная с эффектом стекла */
+        .top-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: rgba(5, 5, 5, 0.4);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+            filter: brightness(0.9);
+        }
+
+        .logo-icon:hover {
+            transform: scale(1.1);
+            filter: brightness(1.1);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+            background: rgba(30, 30, 30, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-links a:hover {
+            background: rgba(60, 60, 60, 0.4);
+            backdrop-filter: blur(15px);
+            transform: translateY(-1px);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Основной контент */
+        .main-content {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .background-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(20, 0, 40, 0.7);
+            z-index: 0;
+        }
+
+        .content {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.95);
+            z-index: 1;
+            padding: 2.5rem;
+            background: rgba(10, 10, 20, 0.5);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            max-width: 90%;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            text-shadow: 2px 4px 15px rgba(0, 0, 0, 0.8);
+            background: linear-gradient(to right, #e0e0e0, #b19cd9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        h1:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            opacity: 0.85;
+            margin-top: 10px;
+            color: rgba(255, 255, 255, 0.8);
+            text-shadow: 1px 2px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+                letter-spacing: 2px;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .content {
+                padding: 1.8rem;
+            }
+            
+            .top-panel {
+                height: 45px;
+                padding: 0 15px;
+            }
+            
+            .logo-icon {
+                width: 28px;
+                height: 28px;
+            }
+            
+            .nav-links {
+                gap: 10px;
+            }
+            
+            .nav-links a {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+        }
+
+        /* Резервный фон на случай если изображение не загрузится */
+        .backup-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2d004d 0%, #4a1c6b 100%);
+            z-index: -2;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Анимация затемнения при загрузке -->
+    <div class="screen-overlay" id="screenOverlay">
+        <img src="images/favicon.ico" alt="Loading" class="loading-icon" id="loadingIcon">
+    </div>
+
+    <!-- Резервный фон -->
+    <div class="backup-bg" id="backupBg"></div>
+    
+    <!-- Верхняя панель -->
+    <div class="top-panel">
+        <div class="logo">
+            <img src="images/favicon.ico" alt="LILDRUG" class="logo-icon">
+        </div>
+        <div class="nav-links">
+            <a href="https://t.me/lildrugbio">Главная</a>
+            <a href="https://t.me/lildrugbio">Обо мне</a>
+            <a href="https://t.me/lildrugbio">Контакты</a>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="main-content">
+        <div class="background-overlay"></div>
+        <div class="particles" id="particles"></div>
+        <div class="content">
+            <a href="https://t.me/lildrugbio" style="text-decoration: none;">
+                <h1>САЙТ ЛИЛДРАГА</h1>
+            </a>
+            <p class="subtitle">Я крутой очень.</p>
+        </div>
+    </div>
+
+    <script>
+        // Проверка загрузки фонового изображения
+        document.addEventListener('DOMContentLoaded', function() {
+            const img = new Image();
+            img.src = 'images/vaybe.jpg';
+            img.onload = function() {
+                console.log('Фоновое изображение успешно загружено');
+            };
+            img.onerror = function() {
+                console.log('Ошибка загрузки фонового изображения');
+                document.getElementById('backupBg').style.display = 'block';
+            };
+
+            // Проверка загрузки иконки
+            const iconImg = new Image();
+            iconImg.src = 'images/favicon.ico';
+            iconImg.onerror = function() {
+                console.log('Ошибка загрузки иконки');
+                // Если иконка не загружается, показываем текст вместо нее
+                const logo = document.querySelector('.logo');
+                logo.innerHTML = '<span style="color: rgba(255,255,255,0.9); font-weight: bold; text-shadow: 0 2px 8px rgba(0,0,0,0.7);">LILDRUG</span>';
+            };
+
+            // Создание частиц для фона
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Случайный размер
+                const size = Math.random() * 20 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Случайная позиция
+                particle.style.left = `${Math.random() * 100}%`;
+                
+                // Случайная задержка анимации
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                
+                // Случайная продолжительность анимации
+                particle.style.animationDuration = `${15 + Math.random() * 10}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+
+            // Убираем экран загрузки после завершения анимации
+            setTimeout(() => {
+                const overlay = document.getElementById('screenOverlay');
+                if (overlay) {
+                    overlay.remove();
+                }
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
